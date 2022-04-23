@@ -184,3 +184,6 @@ code/build/x64/Debug/ZERO_CHECK/ZERO_CHECK.tlog/ZERO_CHECK.lastbuildstate
 code/build/ZERO_CHECK.vcxproj
 code/build/ZERO_CHECK.vcxproj.filters
 code/code.rar
+code/build/.vs/engine/v16/ipch/AutoPCH/336a5e040dbcadb5/IMGUI_TABLES.ipch
+code/build/.vs/engine/v16/ipch/AutoPCH/992663c6f2429cb3/OBJECT3D.ipch
+code/build/.vs/engine/v16/ipch/AutoPCH/f833e4816d24448/CAMERA.ipch

@@ -51,6 +51,8 @@ public:
         ImGui::StyleColorsDark();
         ImGui_ImplGlfw_InitForOpenGL(_window, true);
         ImGui_ImplOpenGL3_Init();
+
+
     }
 
     ~MassSpringAnimation()
@@ -115,11 +117,16 @@ public:
         const glm::mat4 &projection = glm::perspective(glm::radians(camera->Zoom), (float)_windowWidth / (float)_windowHeight, 0.1f, 100.0f);
         const glm::mat4 &view = camera->GetViewMatrix();
 
+        glm::vec3 lightdir(1, -1, 1);
+        lightdir = -glm::normalize(lightdir);
+
         floorShader->use();
         floorShader->setMat4("view", view);
         floorShader->setMat4("projection", projection);
+        floorShader->setVec3("lightDir", lightdir);
         floorShader->setMat4("model", glm::mat4(1.0f));
         floorShader->setVec4("color", glm::vec4(0.6, 0.6, 0.6, 1));
+
         floor->draw();
 
         sphereShader->use();
@@ -127,6 +134,7 @@ public:
         sphereShader->setMat4("view", view);
         sphereShader->setMat4("projection", projection);
         sphereShader->setVec4("color", glm::vec4(0.5, 0, 0, 1));
+        sphereShader->setVec3("lightDir", lightdir);
         glBindVertexArray(sphere->_vao);
 
         unsigned int instanceVBO;
@@ -160,7 +168,19 @@ public:
         const auto flags =
             ImGuiWindowFlags_AlwaysAutoResize |
             ImGuiWindowFlags_NoSavedSettings;
-
+        bool control_panel = true;
+        if (!ImGui::Begin("Control Panel", &control_panel, flags))
+        {
+            ImGui::End();
+        }
+        else
+        {
+            if (ImGui::Button("Restart!")) {
+                setParameter();
+                makeChain(numberOfPoints);
+            }
+            ImGui::End();
+        }
         bool camera_window = true;
         if (!ImGui::Begin("Camera Parameter", &camera_window, flags))
         {
