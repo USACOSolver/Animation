@@ -25,7 +25,7 @@ public:
         numberOfPoints = num;
         // set parameter
         setParameter();
-        makeChain(10);
+        makeChain();
 
         // render about
         _windowTitle = "Mass Spring Animation";
@@ -177,7 +177,7 @@ public:
         {
             if (ImGui::Button("Restart!")) {
                 setParameter();
-                makeChain(numberOfPoints);
+                makeChain();
             }
             ImGui::End();
         }
@@ -288,7 +288,7 @@ private:
         constraints.push_back(Constraint{0, Vec3(0), Vec3(0)});
         wind = std::make_shared<ConstantVectorField>(Vec3(30.0, 0, 0));
     }
-    void makeChain(int numberOfPoints)
+    void makeChain()
     {
         if (numberOfPoints == 0)
         {
@@ -304,7 +304,7 @@ private:
 
         for (int i = 0; i < numberOfPoints; ++i)
         {
-            positions[i].x = -static_cast<float>(i);
+            positions[i] = glm::vec3(-static_cast<float>(i), 0, 0);
         }
 
         for (int i = 0; i < numberOfEdges; ++i)
