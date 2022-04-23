@@ -51,8 +51,6 @@ public:
         ImGui::StyleColorsDark();
         ImGui_ImplGlfw_InitForOpenGL(_window, true);
         ImGui_ImplOpenGL3_Init();
-
-
     }
 
     ~MassSpringAnimation()
@@ -175,8 +173,18 @@ public:
         }
         else
         {
-            if (ImGui::Button("Restart!")) {
-                setParameter();
+            int number = numberOfPoints;
+            ImGui::SliderInt("Number of balls", &number, 1, 10);
+            float g = 9.8;
+            ImGui::SliderFloat("Gravity", &g, 0, 20);
+            float rl = restLength;
+            ImGui::SliderFloat("Rest Length", &rl, 0, 5);
+            if (ImGui::Button("Restart!"))
+            {
+                restLength = rl;
+                numberOfPoints = number;
+                gravity.y = -g;
+
                 makeChain();
             }
             ImGui::End();
@@ -282,7 +290,7 @@ private:
         dampingCoefficient = 1.0;
         dragCoefficient = 0.1;
 
-        floorPositionY = -7.0;
+        floorPositionY = -10.0;
         restitutionCoefficient = 0.3;
 
         constraints.push_back(Constraint{0, Vec3(0), Vec3(0)});
