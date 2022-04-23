@@ -173,11 +173,11 @@ public:
         }
         else
         {
-            int number = numberOfPoints;
+            static int number = numberOfPoints;
             ImGui::SliderInt("Number of balls", &number, 1, 10);
-            float g = 9.8;
+            static float g = 9.8;
             ImGui::SliderFloat("Gravity", &g, 0, 20);
-            float rl = restLength;
+            static float rl = restLength;
             ImGui::SliderFloat("Rest Length", &rl, 0, 5);
             if (ImGui::Button("Restart!"))
             {
