@@ -30,21 +30,18 @@ public:
         // render about
         _windowTitle = "Mass Spring Animation";
 
-        Plane floor(Vec3(0, 0, -10), Vec3(0, 0, 1));
+        floor.reset(new Plane(Vec3(0, floorPositionY - 1, 0), Vec3(0, 1, 0)));
 
         sphere.reset(new Model("../data/sphere.obj"));
-        sphere->scale = Vec3(0.1, 0.1, 0.1);
+        sphere->scale = Vec3(1, 1, 1);
 
-        camera.reset(new Camera(glm::vec3(0, 0, 10)));
+        camera.reset(new Camera(glm::vec3(0, 0, 30)));
 
         modelMatrices.resize(numberOfPoints);
 
-        /*std::string vsfile = "../test/Instanced.vs";
+        std::string vsfile = "../test/Instanced.vs";
         std::string floorvs = "../test/floor.vs";
-        std::string fsfile = "../test/Instanced.fs";*/
-        std::string vsfile = "C:/Users/Stellaris/Desktop/ParticleBasedFluid/code/test/Instanced.vs";
-        std::string floorvs = "C:/Users/Stellaris/Desktop/ParticleBasedFluid/code/test/floor.vs";
-        std::string fsfile = "C:/Users/Stellaris/Desktop/ParticleBasedFluid/code/test/Instanced.fs";
+        std::string fsfile = "../test/Instanced.fs";
         floorShader.reset(new Shader(floorvs, fsfile));
         sphereShader.reset(new Shader(vsfile, fsfile));
 
@@ -67,24 +64,33 @@ public:
     virtual void handleInput()
     {
         onAdvanceTimeStep(_deltaTime);
+        float d = 50 * SPEED * _deltaTime;
         if (_keyboardInput.keyStates[GLFW_KEY_W] != GLFW_RELEASE)
         {
-            camera->ProcessKeyboard(FORWARD, _deltaTime);
+            camera->ProcessMouseMovement(0, d);
         }
 
         if (_keyboardInput.keyStates[GLFW_KEY_A] != GLFW_RELEASE)
         {
-            camera->ProcessKeyboard(LEFT, _deltaTime);
+            camera->ProcessMouseMovement(-d, 0);
         }
 
         if (_keyboardInput.keyStates[GLFW_KEY_S] != GLFW_RELEASE)
         {
-            camera->ProcessKeyboard(BACKWARD, _deltaTime);
+            camera->ProcessMouseMovement(0, -d);
         }
 
         if (_keyboardInput.keyStates[GLFW_KEY_D] != GLFW_RELEASE)
         {
-            camera->ProcessKeyboard(RIGHT, _deltaTime);
+            camera->ProcessMouseMovement(d, 0);
+        }
+        if (_keyboardInput.keyStates[GLFW_KEY_Q] != GLFW_RELEASE)
+        {
+            camera->ProcessMouseScroll(d);
+        }
+        if (_keyboardInput.keyStates[GLFW_KEY_E] != GLFW_RELEASE)
+        {
+            camera->ProcessMouseScroll(-d);
         }
     }
 
@@ -113,12 +119,14 @@ public:
         floorShader->setMat4("view", view);
         floorShader->setMat4("projection", projection);
         floorShader->setMat4("model", glm::mat4(1.0f));
-        floor.draw();
+        floorShader->setVec4("color", glm::vec4(0.6, 0.6, 0.6, 1));
+        floor->draw();
 
         sphereShader->use();
 
         sphereShader->setMat4("view", view);
         sphereShader->setMat4("projection", projection);
+        sphereShader->setVec4("color", glm::vec4(0.5, 0, 0, 1));
         glBindVertexArray(sphere->_vao);
 
         unsigned int instanceVBO;
@@ -127,7 +135,6 @@ public:
         glBufferData(GL_ARRAY_BUFFER, sizeof(glm::mat4) * numberOfPoints, &modelMatrices[0], GL_STATIC_DRAW);
 
         GLsizei vec4Size = sizeof(glm::vec4);
-        printf("%d\n", vec4Size);
         glEnableVertexAttribArray(3);
         glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void *)0);
         glEnableVertexAttribArray(4);
@@ -143,6 +150,37 @@ public:
 
         glBindVertexArray(0);
         sphere->instancedDraw(numberOfPoints);
+
+        // imgui
+        // draw ui elements
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+
+        const auto flags =
+            ImGuiWindowFlags_AlwaysAutoResize |
+            ImGuiWindowFlags_NoSavedSettings;
+
+        bool camera_window = true;
+        if (!ImGui::Begin("Camera Parameter", &camera_window, flags))
+        {
+            ImGui::End();
+        }
+        else
+        {
+            glm::vec3 pos = camera->Position;
+            std::string text = "Camera Position X: " + std::to_string(pos.x);
+            ImGui::Text(text.c_str());
+            ImGui::NewLine();
+            text = "Camera Position Y: " + std::to_string(pos.y);
+            ImGui::Text(text.c_str());
+            ImGui::NewLine();
+            text = "Camera Position Z: " + std::to_string(pos.z);
+            ImGui::Text(text.c_str());
+            ImGui::End();
+        }
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     }
 
 private:
@@ -288,7 +326,7 @@ private:
     std::shared_ptr<VectorField> wind;
     std::vector<Constraint> constraints;
 
-    Plane floor;
+    std::unique_ptr<Plane> floor;
     std::unique_ptr<Model> sphere;
     std::unique_ptr<Camera> camera;
     std::unique_ptr<Shader> sphereShader;
