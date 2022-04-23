@@ -35,6 +35,10 @@ public:
     {
         return value;
     }
+    void setValue(const glm::vec3 &x)
+    {
+        value = x;
+    }
 
 private:
     glm::vec3 value;

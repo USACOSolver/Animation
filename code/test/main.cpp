@@ -179,12 +179,14 @@ public:
             ImGui::SliderFloat("Gravity", &g, 0, 20);
             static float rl = restLength;
             ImGui::SliderFloat("Rest Length", &rl, 0, 5);
+            static float intensity = 100;
+            ImGui::SliderFloat("Intensity of wind(horizontal)", &intensity, -100, 100);
             if (ImGui::Button("Restart!"))
             {
                 restLength = rl;
                 numberOfPoints = number;
                 gravity.y = -g;
-
+                wind->setValue(glm::vec3(intensity, 0, 0));
                 makeChain();
             }
             ImGui::End();
@@ -351,7 +353,7 @@ private:
     std::vector<Vec3> forces;
     std::vector<Edge> edges;
 
-    std::shared_ptr<VectorField> wind;
+    std::shared_ptr<ConstantVectorField> wind;
     std::vector<Constraint> constraints;
 
     std::unique_ptr<Plane> floor;
