@@ -1,0 +1,27 @@
+Determining if the C compiler works failed with the following output:
+Change Dir: C:/Users/Stellaris/Desktop/ParticleBasedFluid/code/unix/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Rtools/bin/make.exe cmTC_d4cee/fast && /Rtools/bin/make  -f CMakeFiles/cmTC_d4cee.dir/build.make CMakeFiles/cmTC_d4cee.dir/build
+make: /bin/sh: Command not found
+make: *** [Makefile:141: cmTC_d4cee/fast] Error 127
+
+
+
+Determining if the C compiler works failed with the following output:
+Change Dir: C:/Users/Stellaris/Desktop/ParticleBasedFluid/code/unix/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Rtools/bin/make.exe cmTC_45af2/fast && /Rtools/bin/make  -f CMakeFiles/cmTC_45af2.dir/build.make CMakeFiles/cmTC_45af2.dir/build
+make: /bin/sh: Command not found
+make: *** [Makefile:141: cmTC_45af2/fast] Error 127
+
+
+
+Determining if the C compiler works failed with the following output:
+Change Dir: C:/Users/Stellaris/Desktop/ParticleBasedFluid/code/unix/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Rtools/bin/make.exe cmTC_6ea4f/fast && /Rtools/bin/make  -f CMakeFiles/cmTC_6ea4f.dir/build.make CMakeFiles/cmTC_6ea4f.dir/build
+make: /bin/sh: Command not found
+make: *** [Makefile:141: cmTC_6ea4f/fast] Error 127
+
+
+
